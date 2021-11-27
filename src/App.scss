@@ -1,6 +1,7 @@
 .App {
   text-align: center;
   $green: rgb(0, 211, 0);
+  $yellow: rgb(219, 200, 25);
 
   .App-header {
     display: flex;
@@ -16,16 +17,23 @@
     .grey {
       background-color: white;
     }
+
     >div:nth-child(2n) {
       background-color: white;
-      
-    .grey {
-      background-color: #f3f3f3;
-    }
+
+      .grey {
+        background-color: #f3f3f3;
+      }
     }
   }
 
-
+  .space-elements-ten{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 
 
   .two-rows {
@@ -53,6 +61,10 @@
     &.enabled {
       background-color: $green;
     }
+
+    &.error {
+      background-color: $yellow;
+    }
   }
 
   .profile-head,
@@ -72,23 +84,11 @@
   .clickable {
     cursor: pointer;
   }
-
-  button {
-    position: relative;
-    margin: 10px 7px;
-    padding: 5px 5px;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 2px;
-    color: #383736;
-    border: 2px #383736 solid;
-    border-radius: 4px;
-    text-transform: uppercase;
-    outline: 0;
+  
+  .MuiButton-outlined {
     overflow: hidden;
     background: none;
     z-index: 1;
-    cursor: pointer;
     transition: top 0.4s ease-out;
     -o-transition: top 0.4s ease-out;
     -ms-transition: top 0.4s ease-out;

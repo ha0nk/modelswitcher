@@ -7,6 +7,9 @@ class ElectronVtube {
   requestID = "420_69modelswitcher69_420";
   mainVtubeWs = undefined;
 
+  close = ()=>{
+    if (this.mainVtubeWs !== undefined) this.mainVtubeWs.close()
+  }
   updateVtube = (e, data) => {
     return new Promise((resolve, reject) => {
       db.updateRow(this.vtubeAuthTable, { "id": data.id }, data, (isSuccess, msg) => {

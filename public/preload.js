@@ -27,6 +27,23 @@ contextBridge.exposeInMainWorld("electron", {
         ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
     },
+    twitch: {
+      async auth() {
+        return await ipcRenderer.invoke("twitch-auth-request");
+      },
+      async disconnect() {
+        return await ipcRenderer.invoke("twitch-auth-cancel");
+      },
+      async getRewards() {
+        return await ipcRenderer.invoke("twitch-list-rewards");
+      },
+      async createReward(reward) {
+        return await ipcRenderer.invoke("twitch-create-reward", reward);
+      },
+      async updateReward(reward) {
+        return await ipcRenderer.invoke("twitch-update-reward", reward);
+      }
+    },
     vtubeStudio: {
       async status() {
         return await ipcRenderer.invoke("vtube-status");
@@ -58,10 +75,8 @@ contextBridge.exposeInMainWorld("electron", {
       },
       async list() {
         return new Promise((resolve, reject) => {
-          console.log("KILL ME>>>???: o  )")
           ipcRenderer.send("vtube-list");
           ipcRenderer.on("vtube-list-reply", (e, arg) => {
-            console.log("VTUBE lIST REPLY", e, arg);
             if (arg.ok) {
               return resolve(arg);
             }

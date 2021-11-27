@@ -3,10 +3,12 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
 const ElectronVtube = require('./electron-vtube');
 const ElectronProfiles = require('./electron-profiles');
+const ElectronTwitch = require('./electron-twitch');
 
 let win;
 const electronVtube = new ElectronVtube();
 const electronProfiles = new ElectronProfiles();
+const electronTwitch = new ElectronTwitch(); 
 
 ipcMain.handle('profiles-create', electronProfiles.createTable);
 ipcMain.handle('profiles-update', electronProfiles.updateTable);
@@ -21,9 +23,12 @@ ipcMain.on('vtube-connect', electronVtube.connectVtube);
 ipcMain.on('vtube-list', electronVtube.getAllModels);
 
 // ipcMain.on('vtube-select', switchModel);
-// ipcMain.handle('twitch-get-rewards');
+ipcMain.handle('twitch-auth-request', electronTwitch.authTwitch);
+ipcMain.handle('twitch-auth-cancel', electronTwitch.cancelAuthTwitch);
+ipcMain.handle('twitch-list-rewards', electronTwitch.getRewards);
 // ipcMain.handle('twitch-create-reward');
 // ipcMain.handle('twitch-update-reward');
+
 
 function createWindow() {
   win = new BrowserWindow({
@@ -55,9 +60,8 @@ app.on('window-all-closed', async () => {
 app.on('will-quit', async () => {
   const currentData = await electronVtube.getVtubeTable();
   await electronVtube.updateVtube({}, { ...currentData, connected: false });
-  electronProfiles.wss.close();
-  electronVtube.mainVtubeWs.close();
-  electronProfiles.server.close();
+  electronVtube.close();
+  electronProfiles.close();
 })
 
 app.on('activate', () => {

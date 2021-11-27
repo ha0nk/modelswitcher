@@ -9,6 +9,10 @@ class ElectronProfiles {
   wss;
   win;
 
+  close = () =>{    
+    if (this.wss !== undefined) this.wss.close();
+    if (this.server !== undefined) this.server.close();
+  }
 
   startServer = (win) => {
     this.server = http.createServer();
