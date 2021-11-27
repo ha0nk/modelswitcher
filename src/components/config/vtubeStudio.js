@@ -5,7 +5,7 @@ import { faSync } from '@fortawesome/free-solid-svg-icons'
 import TextField from '@mui/material/TextField';
 import { Button, IconButton, Stack } from '@mui/material';
 
-export const VtubeStudioStatus = ({ onAuthenticate, onConnect, onChange, authenticated = false, connected = false, domain = "", port = "" }) => {
+export const VtubeStudio = ({ onAuthenticate, onConnect, onChange, authenticated = false, connected = false, domain = "", port = "" }) => {
   const [waitingOnWebsocket, setWaiting] = useState(false);
   const debounceOnChange = _debounce(onChange, 1000);
   const onChangeDomain = (e) => {

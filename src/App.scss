@@ -2,7 +2,12 @@
   text-align: center;
   $green: rgb(0, 211, 0);
   $yellow: rgb(219, 200, 25);
-
+  .react-colorful__saturation, .react-colorful__last-control{
+    border-radius: 0;
+  }.react-colorful__pointer{
+    width: 20px;
+    height: 20px;
+  }
   .App-header {
     display: flex;
     flex-direction: column;

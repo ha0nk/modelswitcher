@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react"
-import { Rewards } from "./rewards/rewards";
+import { RewardsList } from "../rewards/rewardsList";
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 
@@ -60,7 +60,7 @@ export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEdit
       <div>{profile.model ? profile.model.modelName : "None Selected"}</div>
     </div>
     <div className="two-rows">
-    <Rewards rewards={profile.rewards} availableRewards={availableRewards} isEditing={isEditing} {...rewardFunctions}/>
+    <RewardsList rewards={profile.rewards} availableRewards={availableRewards} isEditing={isEditing} {...rewardFunctions}/>
       <div>
         <h4>Vtube Studio Hotkeys </h4>
         <div className="profile-row-list grey"> {profile.hotkeys && profile.hotkeys.map(renderHotkeys)}</div>
@@ -86,7 +86,7 @@ export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEdit
       {renderModelSelect()}
     </div>
     <div className="two-rows">
-      <Rewards rewards={profile.rewards} availableRewards={availableRewards} isEditing={isEditing} {...rewardFunctions}/>
+      <RewardsList rewards={profile.rewards} availableRewards={availableRewards} isEditing={isEditing} {...rewardFunctions}/>
       <div>
         <h4>Vtube Studio Hotkeys </h4>
         <div className="profile-row-list grey"> {profile.hotkeys && profile.hotkeys.map(renderHotkeys)}</div>

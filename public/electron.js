@@ -21,14 +21,13 @@ ipcMain.handle('vtube-status-update', electronVtube.updateVtube);
 ipcMain.on('vtube-auth', electronVtube.authVtube);
 ipcMain.on('vtube-connect', electronVtube.connectVtube);
 ipcMain.on('vtube-list', electronVtube.getAllModels);
-
 // ipcMain.on('vtube-select', switchModel);
+
 ipcMain.handle('twitch-auth-request', electronTwitch.authTwitch);
 ipcMain.handle('twitch-auth-cancel', electronTwitch.cancelAuthTwitch);
 ipcMain.handle('twitch-list-rewards', electronTwitch.getRewards);
 // ipcMain.handle('twitch-create-reward');
 // ipcMain.handle('twitch-update-reward');
-
 
 function createWindow() {
   win = new BrowserWindow({
