@@ -1,5 +1,5 @@
 {
-  "name": "modelswitcher-react",
+  "name": "modelswitcher",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -30,7 +30,8 @@
   },
   "main": "public/electron.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "react-scripts start",
+    "electron-start": "electron-forge start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -76,7 +77,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "modelswitcher_react"
+            "name": "modelswitcher"
           }
         },
         {

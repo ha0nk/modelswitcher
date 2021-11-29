@@ -1,9 +1,9 @@
-import { Fragment, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { RewardsList } from "../rewards/rewardsList";
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
 
-export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEditingGlobal = false, availableModels, availableRewards, ...rewardFunctions }) => {
+export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEditingGlobal = false, availableModels = [], availableRewards = [], ...rewardFunctions }) => {
   const [isEditing, setEditing] = useState(false);
   const [isDeleted, setDeleted] = useState(false);
   const [editingName, setEditingName] = useState(profile.name);
@@ -29,9 +29,9 @@ export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEdit
     onSave({ ...profile, model });
   }
   const renderModelSelect = () => <div>
-    <select value={parseInt((profile.model || { modelID: "0" }).modelID)} onChange={selectModel}>
+    <select value={parseInt((profile.model ? profile.model : { modelID: "0" }).modelID)} onChange={selectModel}>
       {availableModels.length > 0 ? <option value={"0"}>--Select A Model--</option> : <option value={"0"}>--Please Refresh Your VTS Connection--</option>}
-      {availableModels.map((m, i) =>
+      {availableModels.length > 0 && availableModels.map((m, i) =>
         <option key={i} value={parseInt(m.modelID)}>{m.modelName}</option>)}
     </select>
   </div>

@@ -14,7 +14,7 @@ export const _twitchConnected = atom({
 
 export const _vtubeModels = atom({
   key: '_vtubeModels',
-  default: {},
+  default: null,
 });
 
 export const _twitchRewards = atom({

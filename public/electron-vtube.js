@@ -41,7 +41,7 @@ class ElectronVtube {
         })
       }
       db.getAll(this.vtubeAuthTable, (isSuccess, data) => {
-        console.log("getAll: " + isSuccess);
+        console.log("getAll: " + isSuccess, data);
         if (!isSuccess) return reject([]);
         return resolve(data[0]);
       });

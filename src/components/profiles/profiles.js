@@ -109,10 +109,10 @@ export const Profiles = () => {
   }
 
   const renderProfile = (p, i) => <Profile key={i}
-    availableRewards={twitchRewards || []}
+    availableRewards={twitchRewards}
     onTwitchRewardAdd={addTwitchReward}
     onTwitchRewardUpdate={updateTwitchReward}
-    availableModels={vtubeModels|| []}
+    availableModels={vtubeModels}
     onSave={editProfile}
     profile={p}
     isEditingGlobal={currentlyEditingProfile !== null}
@@ -125,7 +125,8 @@ export const Profiles = () => {
       <h2>
         Create A Profile
       </h2>
-      <TextField variant="filled" value={newProfileName} onChange={(e) => setNewProfileName(e.target.value)} /> <Button color="grey" variant="outlined" onClick={createNewProfile}>Create</Button>
+      <TextField variant="filled" value={newProfileName} onChange={(e) => setNewProfileName(e.target.value)} /> 
+      <Button color="grey" variant="outlined" onClick={createNewProfile}>Create</Button>
       <h2> Current Profiles </h2>
       <Stack spacing={2} sx={{mb: 2}} className={"profiles"}>
         {allProfiles.map(renderProfile)}
