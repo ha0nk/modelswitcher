@@ -4,6 +4,7 @@ import { Button, FormControlLabel, FormGroup, IconButton, Stack, Switch, TextFie
 import { Fragment, useState } from "react";
 import { Reward } from "./reward";
 import { HexColorPicker } from "react-colorful";
+import { Tip } from "../generic/tip";
 
 
 export const RewardsManager = ({ rewards, isEditing, availableRewards, onTwitchRewardAdd, onTwitchRewardUpdate, ...rewardFunctions }) => {
@@ -34,13 +35,7 @@ export const RewardsManager = ({ rewards, isEditing, availableRewards, onTwitchR
 
   const renderCurrentRewards = () => <div>
     <Stack justifyContent="center" alignItems="center" spacing={1} direction="row"><h4>Modify Twitch Rewards</h4>
-      <Tooltip title={"Rewards must be created through Modelswitcher."}>
-        <span>
-          <IconButton disabled size="small">
-            <FontAwesomeIcon icon={faQuestionCircle} />
-          </IconButton>
-        </span>
-      </Tooltip>
+      <Tip text="Rewards must be created through Modelswitcher to be used in Modelswitcher." />
     </Stack>
     <div className="profile-row-list grey">{rewards && rewards.map(renderReward)}</div>
   </div>

@@ -1,13 +1,22 @@
-import { Fragment, useEffect, useState } from "react"
+import { Fragment, useState } from "react"
 import { RewardsList } from "../rewards/rewardsList";
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
+import { HotkeysList } from "../hotkeys/hotkeysList";
+import { Dropdown } from "../generic/dropdown";
+import { useRecoilValue } from "recoil";
+import { _vtubeModels } from "../../atoms";
+import { Reload } from "../generic/reload";
 
-export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEditingGlobal = false, availableModels = [], availableRewards = [], ...rewardFunctions }) => {
+export const Profile = ({ profile, onSave, onDelete, onReloadModels, onEnable, onEditing, isEditingGlobal = false, ...rewardFunctions }) => {
   const [isEditing, setEditing] = useState(false);
   const [isDeleted, setDeleted] = useState(false);
   const [editingName, setEditingName] = useState(profile.name);
+  const availableModels = useRecoilValue(_vtubeModels);
 
+  const onHotkeyListUpdate = (hotkeys) => {
+    onSave({ ...profile, hotkeys });
+  }
   const setCurrentlyEditing = (value) => {
     setEditing(value);
     if (value === true) {
@@ -16,27 +25,28 @@ export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEdit
       onEditing(null);
     }
   }
-  const revertEdit = () => {
-    setEditingName(profile.name);
-    setCurrentlyEditing(false);
-  }
   const setEnabled = () => {
     onEnable(profile.id);
   }
   const selectModel = (e) => {
-    const model = availableModels.find(m => m.modelID === e.target.value)
+    const model = availableModels.find(m => (m.modelID).toString() === e.target.value)
     console.log(e.target.value, model);
     onSave({ ...profile, model });
   }
-  const renderModelSelect = () => <div>
-    <select value={parseInt((profile.model ? profile.model : { modelID: "0" }).modelID)} onChange={selectModel}>
-      {availableModels.length > 0 ? <option value={"0"}>--Select A Model--</option> : <option value={"0"}>--Please Refresh Your VTS Connection--</option>}
-      {availableModels.length > 0 && availableModels.map((m, i) =>
-        <option key={i} value={parseInt(m.modelID)}>{m.modelName}</option>)}
-    </select>
-  </div>
 
-  const renderHotkeys = (h, i) => <div>hotkeeei</div>
+  const renderModelSelect = () => <Fragment>
+    {availableModels && availableModels.length > 0 ? <Dropdown
+      onChange={selectModel}
+      title={"Select Model"}
+      value={((profile.model ? profile.model : { modelID: "0" }).modelID).toString()}
+      items={[{ value: "0", name: "--Select A Model--" }, ...availableModels.map(m => ({ value: m.modelID, name: m.modelName }))]} />
+      : <Dropdown disabled={true}
+        title={"Select Model"}
+        value={((profile.model ? profile.model : { modelID: "0" }).modelID).toString()}
+        items={[{ value: "0", name: "--Please Refresh Your VTS Connection--" }]} />}
+  </Fragment>
+
+  const eligibleHotkeys = () => (profile.hotkeys || []).filter(h => h.modelID === (profile.model || {}).modelID)
   const renderStatus = () => <div className={`status ${profile.enabled ? 'enabled' : 'not-enabled'}`}></div>
   const renderStatic = () => <div>
     <div className={"profile-head"}>
@@ -60,14 +70,10 @@ export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEdit
       <div>{profile.model ? profile.model.modelName : "None Selected"}</div>
     </div>
     <div className="two-rows">
-    <RewardsList rewards={profile.rewards} availableRewards={availableRewards} isEditing={isEditing} {...rewardFunctions}/>
-      <div>
-        <h4>Vtube Studio Hotkeys </h4>
-        <div className="profile-row-list grey"> {profile.hotkeys && profile.hotkeys.map(renderHotkeys)}</div>
-      </div>
+      <RewardsList rewards={profile.rewards} isEditing={false} {...rewardFunctions} />
+      <HotkeysList modelID={(profile.model || {}).modelID} hotkeys={eligibleHotkeys()} isEditing={false} />
     </div>
   </div>
-
 
   const renderEditing = () => <div>
     <div className={"profile-head"}>
@@ -75,24 +81,21 @@ export const Profile = ({ profile, onSave, onDelete, onEnable, onEditing, isEdit
       <TextField variant="filled" onChange={(e) => setEditingName(e.target.value)} defaultValue={editingName} />
     </div>
     <div className="space-elements-ten">
-      <Button color="grey" variant="outlined" onClick={revertEdit}>Revert</Button>
       <Button color="grey" variant="outlined" onClick={() => {
         onSave({ ...profile, name: editingName });
         setCurrentlyEditing(false);
       }}>Save</Button>
     </div>
     <div>
-      <h4>Model</h4>
+      <h4>Model <Reload onClick={onReloadModels} /></h4>
       {renderModelSelect()}
     </div>
     <div className="two-rows">
-      <RewardsList rewards={profile.rewards} availableRewards={availableRewards} isEditing={isEditing} {...rewardFunctions}/>
-      <div>
-        <h4>Vtube Studio Hotkeys </h4>
-        <div className="profile-row-list grey"> {profile.hotkeys && profile.hotkeys.map(renderHotkeys)}</div>
-      </div>
+      <RewardsList rewards={profile.rewards} isEditing={true} {...rewardFunctions} />
+      <HotkeysList modelID={(profile.model || {}).modelID} hotkeys={eligibleHotkeys()} isEditing={true} onHotkeyListUpdate={onHotkeyListUpdate} />
     </div>
     <div></div>
   </div>
+
   return (<Fragment>{isEditing ? renderEditing() : renderStatic()}</Fragment>)
 }

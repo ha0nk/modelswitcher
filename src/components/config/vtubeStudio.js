@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 import TextField from '@mui/material/TextField';
 import { Button, IconButton, Stack } from '@mui/material';
+import { Reload } from '../generic/reload';
 
 export const VtubeStudio = ({ onAuthenticate, onConnect, onChange, authenticated = false, connected = false, domain = "", port = "" }) => {
   const [waitingOnWebsocket, setWaiting] = useState(false);
@@ -44,9 +45,7 @@ export const VtubeStudio = ({ onAuthenticate, onConnect, onChange, authenticated
         alignItems="center" >
         <Button variant="outlined" color="grey" onClick={triggerAuthenticate} disabled={waitingOnWebsocket || authenticated}>{authenticated ? "Authenticated" : "Authenticate"}</Button>
         <Button variant="contained" color="green" onClick={onConnect} disabled={waitingOnWebsocket || connected || !authenticated} className={`${connected ? 'connected' : 'not-connected'}`}>{connected ? "Connected" : "Connect"}</Button>
-        <IconButton onClick={() => { connected && onConnect(); }} className={`reconnect${connected ? ' clickable' : ''}`} >
-          <FontAwesomeIcon icon={faSync} />
-        </IconButton>
+        <Reload onClick={() => { connected && onConnect(); }} disabled={!connected} />
       </Stack>
     </div>
   </div>)

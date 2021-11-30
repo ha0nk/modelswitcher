@@ -56,7 +56,7 @@ class ElectronVtube {
       ws.send(JSON.stringify({
         "apiName": "VTubeStudioPublicAPI",
         "apiVersion": "1.0",
-        "this.requestID": this.requestID,
+        "requestID": this.requestID,
         "messageType": "APIStateRequest"
       }));
     });
@@ -69,7 +69,7 @@ class ElectronVtube {
         ws.send(JSON.stringify({
           "apiName": "VTubeStudioPublicAPI",
           "apiVersion": "1.0",
-          "this.requestID": this.requestID,
+          "requestID": this.requestID,
           "messageType": "AuthenticationTokenRequest",
           "data": {
             "pluginName": "Modelswitcher",
@@ -113,7 +113,7 @@ class ElectronVtube {
       this.mainVtubeWs.send(JSON.stringify({
         "apiName": "VTubeStudioPublicAPI",
         "apiVersion": "1.0",
-        "this.requestID": this.requestID,
+        "requestID": this.requestID,
         "messageType": "APIStateRequest"
       }));
     });
@@ -133,7 +133,7 @@ class ElectronVtube {
         this.mainVtubeWs.send(JSON.stringify({
           "apiName": "VTubeStudioPublicAPI",
           "apiVersion": "1.0",
-          "this.requestID": this.requestID,
+          "requestID": this.requestID,
           "messageType": "AuthenticationRequest",
           "data": {
             "pluginName": "Modelswitcher",
@@ -169,7 +169,7 @@ class ElectronVtube {
     this.mainVtubeWs.send(JSON.stringify({
       "apiName": "VTubeStudioPublicAPI",
       "apiVersion": "1.0",
-      "this.requestID": this.requestID,
+      "requestID": this.requestID,
       "messageType": "AvailableModelsRequest",
       "data": {
         "pluginName": "Modelswitcher",
@@ -188,6 +188,31 @@ class ElectronVtube {
       }
     });
   };
+  getModelHotkeys = async (event, modelID) => {    
+    const oldData = await this.getVtubeTable();
+    this.mainVtubeWs.send(JSON.stringify({
+      "apiName": "VTubeStudioPublicAPI",
+      "apiVersion": "1.0",
+      "requestID": this.requestID,
+      "messageType": "HotkeysInCurrentModelRequest",
+      "data": {
+        "pluginName": "Modelswitcher",
+        "pluginDeveloper": "Goofy Honko@ha0nk",
+        "authenticationToken": oldData.auth,
+        "modelID": modelID,
+      }
+    }));
+
+    this.mainVtubeWs.on('message', async (data) => {
+      console.log('received: %s', data);
+      const response = JSON.parse(data);
+      if (response.messageType === "HotkeysInCurrentModelResponse") {
+        event.reply('vtube-hotkeys-reply', { ok: true, message: "Vtube Models Received", data: response.data.availableHotkeys });
+      } else {
+        event.reply('vtube-hotkeys-reply', { ok: false, message: `Response was unhandled, is ${response.messageType}.` });
+      }
+    });
+  }
   switchModel = async (event) => {
 
   };

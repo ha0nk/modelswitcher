@@ -21,6 +21,7 @@ ipcMain.handle('vtube-status-update', electronVtube.updateVtube);
 ipcMain.on('vtube-auth', electronVtube.authVtube);
 ipcMain.on('vtube-connect', electronVtube.connectVtube);
 ipcMain.on('vtube-list', electronVtube.getAllModels);
+ipcMain.on('vtube-hotkeys', electronVtube.getModelHotkeys);
 // ipcMain.on('vtube-select', switchModel);
 
 ipcMain.handle('twitch-auth-request', electronTwitch.authTwitch);

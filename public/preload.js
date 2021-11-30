@@ -84,6 +84,17 @@ contextBridge.exposeInMainWorld("electron", {
           });
         })
       },
+      async hotkeys(modelID){
+        return new Promise((resolve, reject) => {
+          ipcRenderer.send("vtube-hotkeys", modelID);
+          ipcRenderer.on("vtube-hotkeys-reply", (e, arg) => {
+            if (arg.ok) {
+              return resolve(arg);
+            }
+            return reject(arg.message);
+          });
+        })        
+      },
       async select(id) {
         return new Promise((resolve, reject) => {
           ipcRenderer.send("vtube-select", id);
