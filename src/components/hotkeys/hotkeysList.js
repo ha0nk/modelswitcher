@@ -28,7 +28,6 @@ export const HotkeysList = ({ hotkeys = [], isEditing = false, modelID, onHotkey
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modelID]);
 
-  //need reload button for after u add a hotkey in vts
   const getHotkeys = async () => {
     if (isEditing) {
       const vtubeModelHotkeys = await api.vtubeStudio.hotkeys(modelID);
@@ -67,10 +66,10 @@ export const HotkeysList = ({ hotkeys = [], isEditing = false, modelID, onHotkey
   </Stack>
 
   return (<Stack spacing={2} sx={{ mb: 2 }}>
-    <Stack justifyContent="center" spacing={2} direction="horizontal">
-      <Stack justifyContent="center" alignItems="center" spacing={1} direction="row"><h4>Vtube Studio Hotkeys</h4>
-        <Tip text="Hotkeys  will be turned on when profile is active, and off when profile is inactive." />
-      </Stack> {isEditing && <Reload disabled={!modelID} onClick={getHotkeys} />}</Stack>
+    <div>
+      <Stack justifyContent="center" alignItems="center" spacing={1} direction="row"><h4>Vtube Studio Hotkeys
+        <Tip text="Hotkeys  will be turned on when profile is active, and off when profile is inactive." />{isEditing && <Reload disabled={!modelID} onClick={getHotkeys} />}</h4>
+      </Stack> </div>
     <Stack spacing={2} sx={{ pb: 2, pt: 2 }} className="profile-row-list grey">{hotkeys.map((r, i) => <Hotkey key={i} isEditing={isEditing} hotkey={r} />)}</Stack>
     {isEditing && availableHotkeys && <div> {renderHotkeySelect()}</div>}
   </Stack>)

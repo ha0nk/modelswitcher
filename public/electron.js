@@ -27,8 +27,9 @@ ipcMain.on('vtube-hotkeys', electronVtube.getModelHotkeys);
 ipcMain.handle('twitch-auth-request', electronTwitch.authTwitch);
 ipcMain.handle('twitch-auth-cancel', electronTwitch.cancelAuthTwitch);
 ipcMain.handle('twitch-list-rewards', electronTwitch.getRewards);
-// ipcMain.handle('twitch-create-reward');
-// ipcMain.handle('twitch-update-reward');
+
+ipcMain.handle('twitch-create-reward', electronTwitch.createReward);
+ipcMain.handle('twitch-update-reward', electronTwitch.updateReward);
 
 function createWindow() {
   win = new BrowserWindow({

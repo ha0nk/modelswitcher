@@ -15,10 +15,10 @@ class ElectronTwitch {
           clientId,
           redirectUri
         });
+        await this.authProvider.getAccessToken(['channel:manage:redemptions']);
         this.client = new ApiClient({
           authProvider: this.authProvider
         });
-        await this.client.requestScopes(['channel:manage:redemptions']);
         this.user = await this.client.getTokenInfo();
         console.log("Sucessful authentication", this.user.userId);
         return resolve(this.user);
@@ -31,13 +31,16 @@ class ElectronTwitch {
     this.authProvider.allowUserChange();
   }
   getRewards = async () => {
+    await this.authProvider.getAccessToken(['channel:manage:redemptions']);
     return await this.client.channelPoints.getCustomRewards(this.user.userId, true);
   }
-  createReward = async(e, reward) => {
-    return {};
+  createReward = async (e, reward) => {
+    await this.authProvider.getAccessToken(['channel:manage:redemptions']);
+    return await this.client.channelPoints.createCustomReward(this.user.userId, reward);
   }
-  updateReward = async(e, reward) => {
-    return {};
+  updateReward = async (e, reward) => {
+    await this.authProvider.getAccessToken(['channel:manage:redemptions']);
+    return await this.client.channelPoints.updateCustomReward(this.user.userId, reward.id, reward);
   }
 
 }

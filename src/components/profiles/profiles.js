@@ -36,10 +36,14 @@ export const Profiles = () => {
 
   useEffect(() => {
     async function getRewards() {
-      if (twitchAuth && !twitchRewards) {
-        const result = await api.twitch.getRewards();
-        setTwitchRewards(result);
-        console.log(result);
+      try {
+        if (twitchAuth && !twitchRewards) {
+          const result = await api.twitch.getRewards();
+          setTwitchRewards(result);
+          console.log(result);
+        }
+      } catch (e) {
+        console.log(e)
       }
     }
     getRewards();
@@ -100,20 +104,9 @@ export const Profiles = () => {
     }
   }
 
-  const addTwitchReward = async (reward, profile) => {
-    const resReward = await api.twitch.createReward(reward)
-    await editProfile({ ...profile, rewards: [profile.rewards, ...resReward] });
-  }
-  const updateTwitchReward = async (reward, profile) => {
-    const resReward = await api.twitch.updateReward(reward)
-    await editProfile({ ...profile, rewards: [profile.rewards.filter(r => r.id !== resReward.id), ...reward] });
-  }
-
   const renderProfile = (p, i) => <Profile key={i}
     onReloadModels={getModels}
     availableRewards={twitchRewards}
-    onTwitchRewardAdd={addTwitchReward}
-    onTwitchRewardUpdate={updateTwitchReward}
     availableModels={vtubeModels}
     onSave={editProfile}
     profile={p}
