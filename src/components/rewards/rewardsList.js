@@ -20,10 +20,10 @@ export const RewardsList = ({ rewards, isEditing, onRewardListUpdate }) => {
     await onRewardListUpdate(newRewardList);
   }
 
-  const renderReward = (r, i) => <Reward key={i} editing={isEditing} reward={r} />
+  const renderReward = (r, i) => <Reward key={i} editing={isEditing} {...r} />
 
   const renderAddReward = () => <Fragment>
-    {availableRewards.length > 0 ? <Dropdown
+    {(availableRewards||[]).length > 0 ? <Dropdown
       onChange={addReward}
       title={"Select Reward"}
       value={"0"}

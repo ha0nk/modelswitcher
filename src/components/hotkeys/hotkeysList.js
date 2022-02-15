@@ -41,7 +41,6 @@ export const HotkeysList = ({ hotkeys = [], isEditing = false, modelID, onHotkey
   }
 
   const addHotkey = async () => {
-    debugger;
     const newHotkeyList = [...hotkeys, { ...currentSelectedNewHotkey, modelID }];
     await onHotkeyListUpdate(newHotkeyList);
     setCurrentSelectedNewHotkey({ hotkeyID: "0" });

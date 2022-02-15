@@ -35,13 +35,13 @@ contextBridge.exposeInMainWorld("electron", {
         return await ipcRenderer.invoke("twitch-auth-cancel");
       },
       async getRewards() {
-        return await ipcRenderer.invoke("twitch-list-rewards").data;
+        return await ipcRenderer.invoke("twitch-list-rewards");
       },
       async createReward(reward) {
-        return await ipcRenderer.invoke("twitch-create-reward", reward).data;
+        return await ipcRenderer.invoke("twitch-create-reward", reward);
       },
       async updateReward(reward) {
-        return await ipcRenderer.invoke("twitch-update-reward", reward).data;
+        return await ipcRenderer.invoke("twitch-update-reward", reward);
       }
     },
     vtubeStudio: {

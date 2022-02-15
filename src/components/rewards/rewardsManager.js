@@ -45,11 +45,10 @@ export const RewardsManager = () => {
 
   const createReward = async () => {
     try {
-      debugger;
       const newRewardToCreate = { ...newReward };
       setNewReward(newRewardDefault)
       const result = await api.twitch.createReward(newRewardToCreate);
-      setTwitchRewards([...twitchRewards, result.data]);
+      setTwitchRewards([...(twitchRewards||[]), result]);
     } catch (e) {
       console.log(e)
     }
@@ -60,13 +59,13 @@ export const RewardsManager = () => {
       const newRewardToCreate = { ...newReward };
       setNewReward(newRewardDefault)
       const result = await api.twitch.updateReward(newRewardToCreate);
-      setTwitchRewards([...twitchRewards, result.data]);
+      setTwitchRewards([...(twitchRewards||[]), result]);
     } catch (e) {
       console.log(e)
     }
   }
 
-  const renderReward = (r, i) => <Reward key={i} reward={r} />
+  const renderReward = (r, i) => <Reward key={i} {...r} />
 
   const renderCurrentRewards = () => <div>
     <Stack justifyContent="center" alignItems="center" spacing={1} direction="row"><h4>Modify Twitch Rewards</h4>
