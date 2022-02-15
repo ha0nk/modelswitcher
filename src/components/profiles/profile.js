@@ -17,6 +17,9 @@ export const Profile = ({ profile, onSave, onDelete, onReloadModels, onEnable, o
   const onHotkeyListUpdate = (hotkeys) => {
     onSave({ ...profile, hotkeys });
   }
+  const onRewardListUpdate = (rewards) => {
+    onSave({...profile, rewards});
+  }
   const setCurrentlyEditing = (value) => {
     setEditing(value);
     if (value === true) {
@@ -91,7 +94,7 @@ export const Profile = ({ profile, onSave, onDelete, onReloadModels, onEnable, o
       {renderModelSelect()}
     </div>
     <div className="two-rows">
-      <RewardsList rewards={profile.rewards} isEditing={true} {...rewardFunctions} />
+      <RewardsList rewards={profile.rewards} isEditing={true} {...rewardFunctions} onRewardListUpdate={onRewardListUpdate}/>
       <HotkeysList modelID={(profile.model || {}).modelID} hotkeys={eligibleHotkeys()} isEditing={true} onHotkeyListUpdate={onHotkeyListUpdate} />
     </div>
     <div></div>

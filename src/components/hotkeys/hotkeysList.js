@@ -50,7 +50,7 @@ export const HotkeysList = ({ hotkeys = [], isEditing = false, modelID, onHotkey
     setCurrentSelectedNewHotkey(availableHotkeys.find(h => h.hotkeyID === e.target.value));
   }
 
-  const renderHotkeySelect = () => <Stack direction="horizontal">
+  const renderHotkeySelect = () => <Stack direction="column">
     <Dropdown
       disabled={!modelID}
       value={currentSelectedNewHotkey.hotkeyID}

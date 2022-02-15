@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { _twitchRewards } from "../../atoms";
 import { Dropdown } from "../generic/dropdown";
@@ -8,17 +8,23 @@ import { Reward } from "./reward"
 
 //make idk dropdown to select reward with + beside it to add to list, all rewards on list have - to remove
 //if a reward is on the list, it's enabled when the profile is activated, and disabled when the profile is no longer active
-export const RewardsList = ({ rewards, isEditing, onRewardListUpdate }) => {
+export const RewardsList = ({ rewards = [], isEditing, onRewardListUpdate = () => {} }) => {
   const availableRewards = useRecoilValue(_twitchRewards);
 
-  const removeReward = async (reward) => {
-    const newRewardList = { ...rewards.filter(r => r.id !== reward.id) }
+  const removeReward = async (e) => {
+    const reward = availableRewards.find(r => r.id === e.target.value);
+    const newRewardList = [...rewards.filter(r => r.id !== reward.id)]
     await onRewardListUpdate(newRewardList);
   }
-  const addReward = async (reward) => {
-    const newRewardList = { ...rewards, reward }
+  const addReward = async (e) => {
+    const reward = availableRewards.find(r => r.id === e.target.value);
+    const newRewardList = [...rewards, reward]
     await onRewardListUpdate(newRewardList);
   }
+
+  useEffect(() => {
+    console.log(rewards)
+  },[]);
 
   const renderReward = (r, i) => <Reward key={i} editing={isEditing} {...r} />
 
@@ -27,7 +33,7 @@ export const RewardsList = ({ rewards, isEditing, onRewardListUpdate }) => {
       onChange={addReward}
       title={"Select Reward"}
       value={"0"}
-      items={[{ value: "0", name: "--Select A Reward--" }, ...availableRewards.map(m => ({ value: m.modelID, name: m.modelName }))]} />
+      items={[{ value: "0", name: "--Select A Reward--" }, ...availableRewards.filter(r=> !rewards.find(re => re.id === r.id)).map(m => ({ value: m.id, name: m.title }))]} />
       : <Dropdown disabled={true}
         title={"Select Reward"}
         value={"0"}

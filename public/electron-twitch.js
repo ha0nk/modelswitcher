@@ -33,6 +33,7 @@ class ElectronTwitch {
   //context-bridge doesn't allow you to pass complex objects this took SO LONG TO SOLVE :,,,o)
   //https://www.electronjs.org/docs/latest/api/context-bridge#parameter--error--return-type-support
   mapReward = r => ({
+    id: r.id,
     title: r.title,
     cost: r.cost,
     prompt: r.prompt,
