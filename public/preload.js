@@ -37,6 +37,10 @@ contextBridge.exposeInMainWorld("electron", {
       async getRewards() {
         return await ipcRenderer.invoke("twitch-list-rewards");
       },
+      getImageUrlScales : {"x1": 1, "x2": 2, "X4": 4},
+      async getImageUrl({reward, scale}){
+        return await ipcRenderer.invoke("twitch-get-reward-image-url", {reward, scale});
+      },
       async createReward(reward) {
         return await ipcRenderer.invoke("twitch-create-reward", reward);
       },

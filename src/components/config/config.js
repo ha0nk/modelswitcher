@@ -4,12 +4,22 @@ import { Fragment } from 'react';
 import { Twitch } from './twitch';
 import { VtubeStudio } from './vtubeStudio';
 
-export const Config = ({vtubeStatus, setVtubeStatus, twitchAuth, setTwitchAuth, connectVtube, authenticateTwitch}) => {
+export const Config = ({vtubeStatus, setVtubeStatus, twitchAuth, setTwitchAuth, connectVtube}) => {
   const api = window.electron.api;
+  
+  const authenticateTwitch = async () => {
+    try {
+      const result = await api.twitch.auth();
+      setTwitchAuth(result);
+    }
+    catch (e) {
+      console.log(e.message);
+    }
+  }
   const disconnectTwitch = async () => {
     try {
       const result = await api.twitch.disconnect();
-      setTwitchAuth(result);
+      setTwitchAuth({error: "disconnected"});
     }
     catch (e) {
       console.log(e.message);
@@ -36,7 +46,7 @@ export const Config = ({vtubeStatus, setVtubeStatus, twitchAuth, setTwitchAuth, 
 
   return (<Fragment>
     <Stack spacing={2}>
-      <Twitch isAuthenticated={twitchAuth} onAuthenticate={authenticateTwitch} onDisconnect={disconnectTwitch} />
+      <Twitch isAuthenticated={!twitchAuth.error} onAuthenticate={authenticateTwitch} onDisconnect={disconnectTwitch} />
       <VtubeStudio onAuthenticate={authenticateVtube}
         onConnect={connectVtube}
         onChange={updateVtubeStatus}

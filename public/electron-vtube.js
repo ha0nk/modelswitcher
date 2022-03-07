@@ -61,6 +61,11 @@ class ElectronVtube {
       }));
     });
 
+    ws.on('error', function(ex) {
+      console.log("handled error");
+      event.reply('vtube-auth-reply', { ok: false, message: ex });
+    });
+
     const handleStateBroadcastOk = async (response) => {
       if (response.apiName === "VTubeStudioPublicAPI" && response.apiVersion === "1.0") {
         if (!!response.data.errorID) {
@@ -117,6 +122,13 @@ class ElectronVtube {
         "messageType": "APIStateRequest"
       }));
     });
+
+    this.mainVtubeWs.on('error', function(ex) {
+      console.log("handled error");
+      console.log(ex);
+      event.reply('vtube-connect-reply', { ok: false, message: ex});
+    });
+
     const oldData = await this.getVtubeTable();
     if (!oldData.auth) {
       const currentData = { ...oldData, authenticated: false };

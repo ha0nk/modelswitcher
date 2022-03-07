@@ -3,13 +3,15 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Routes, Route, Link } from 'react-router-dom'
 import { Profiles } from './components/profiles/profiles';
 import { Config } from './components/config/config';
-import { BottomNavigation, BottomNavigationAction, Paper, Box, CssBaseline } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, Paper, Box, CssBaseline, Badge } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faGrinHearts, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { RewardsManager } from './components/rewards/rewardsManager';
+import { Rewards } from './components/rewards/rewards';
 import { useRecoilState } from 'recoil';
-import { _twitchConnected, _vtubeStatus } from './atoms';
+import { _twitchConnected, _twitchRewards, _vtubeStatus } from './atoms';
+import { Reward } from './components/rewards/reward';
+import { Profile } from './components/profiles/profile';
 
 const theme = createTheme({
   status: {
@@ -36,12 +38,28 @@ function App() {
 
   const [vtubeStatus, setVtubeStatus] = useRecoilState(_vtubeStatus);
   const [twitchAuth, setTwitchAuth] = useRecoilState(_twitchConnected);
+  const [twitchRewards, setTwitchRewards] = useRecoilState(_twitchRewards);
 
   useEffect(() => {
-    if (!vtubeStatus.status ) startVtubeConnect();
-    if (!twitchAuth) authenticateTwitch();
+    async function getRewards() {
+      try {
+        if (twitchAuth && !twitchRewards) {
+          const result = await api.twitch.getRewards();
+          console.log("twitch rewards: " + result);
+          setTwitchRewards(result);
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    if (!vtubeStatus.connected) startVtubeConnect();
+    if (!twitchAuth.error && !twitchRewards) getRewards();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [twitchAuth]);
+
+  useEffect(() => {
+    console.log(vtubeStatus.connected, twitchAuth)
+  }, [vtubeStatus, twitchAuth]);
 
   const startVtubeConnect = async () => {
     try {
@@ -65,27 +83,27 @@ function App() {
       }
     }
   }
-  const authenticateTwitch = async () => {
-    try {
-      const result = await api.twitch.auth();
-      setTwitchAuth(result);
-    }
-    catch (e) {
-      console.log(e.message);
-    }
-  }
+
 
   return (<ThemeProvider theme={theme} >
     <div className="App">
         <Box sx={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, overflow: "hidden scroll", mb: 7 }}>
           <CssBaseline />
           <Routes>
-            <Route exact path='/' element={<Profiles />} />
-            <Route path='/config' element={<Config
-              connectVtube={connectVtube} authenticateTwitch={authenticateTwitch}
+            <Route exact path='/profiles' element={<Profiles />} />
+            <Route path='/' element={<Config
+              connectVtube={connectVtube} 
               vtubeStatus={vtubeStatus} setVtubeStatus={setVtubeStatus}
               twitchAuth={twitchAuth} setTwitchAuth={setTwitchAuth} />} />
-            <Route path='/rewards' element={<RewardsManager />} />
+            <Route path='/rewards' element={<Rewards />} />
+            <Route path="/reward">
+              <Route path=":id" element={<Reward />} />
+              <Route path="" element={<Reward />} />
+          </Route>
+            <Route path="/profile">
+              <Route path=":id" element={<Profile />} />
+              <Route path="" element={<Profile />} />
+          </Route>
           </Routes>
         </Box>
         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 2 }} elevation={3}>
@@ -95,9 +113,12 @@ function App() {
             onChange={(e, v) => {
               setCurrentPage(v);
             }}>
-            <BottomNavigationAction component={Link} to="/" label="Profiles" icon={<FontAwesomeIcon icon={faUsers} />} />
-            <BottomNavigationAction component={Link} to="/rewards" label="Rewards" icon={<FontAwesomeIcon icon={faGrinHearts} />} />
-            <BottomNavigationAction component={Link} to="/config" label="Config" icon={<FontAwesomeIcon icon={faCog} />} />
+            <BottomNavigationAction disabled={!vtubeStatus.connected || twitchAuth.error} component={Link} to="/profiles" label="Profiles" icon={<FontAwesomeIcon icon={faUsers} />} />
+            <BottomNavigationAction disabled={!vtubeStatus.connected || twitchAuth.error} component={Link} to="/rewards" label="Rewards" icon={<FontAwesomeIcon icon={faGrinHearts} />} />
+            <BottomNavigationAction component={Link} to="/" label="Config" icon={<Badge invisible={vtubeStatus.connected
+             && !twitchAuth.error} variant="dot" color="error">
+              <FontAwesomeIcon icon={faCog}/>
+            </Badge>} />
           </BottomNavigation>
         </Paper>
     </div>

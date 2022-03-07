@@ -4,7 +4,7 @@ import {
 
 export const _profiles = atom({
   key: '_profiles',
-  default: null
+  default: []
 })
 export const _vtubeStatus = atom({
   key: '_vtubeStatus',
@@ -13,7 +13,7 @@ export const _vtubeStatus = atom({
 
 export const _twitchConnected = atom({
   key: '_twitchConnected',
-  default: false,
+  default: {error: "disconnected"},
 });
 
 export const _vtubeModels = atom({
@@ -23,10 +23,10 @@ export const _vtubeModels = atom({
 
 export const _twitchRewards = atom({
   key: '_twitchRewards',
-  default: false,
+  default: null,
 });
 
 export const _vtubeHotkeys = atomFamily({
   key: '_vtubeHotkeys',
-  default: []
+  default: null
 })

@@ -1,10 +1,9 @@
 import { Stack } from "@mui/material";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useRecoilValue } from "recoil";
 import { _twitchRewards } from "../../atoms";
 import { Dropdown } from "../generic/dropdown";
 import { Tip } from "../generic/tip";
-import { Reward } from "./reward"
 
 //make idk dropdown to select reward with + beside it to add to list, all rewards on list have - to remove
 //if a reward is on the list, it's enabled when the profile is activated, and disabled when the profile is no longer active
@@ -22,11 +21,7 @@ export const RewardsList = ({ rewards = [], isEditing, onRewardListUpdate = () =
     await onRewardListUpdate(newRewardList);
   }
 
-  useEffect(() => {
-    console.log(rewards)
-  },[]);
-
-  const renderReward = (r, i) => <Reward key={i} editing={isEditing} {...r} />
+  const renderReward = (r, i) => <div key={i}>{r.name}</div>
 
   const renderAddReward = () => <Fragment>
     {(availableRewards||[]).length > 0 ? <Dropdown

@@ -1,7 +1,8 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { _profiles, _twitchConnected, _twitchRewards, _vtubeModels, _vtubeStatus } from "../../atoms";
+import { _profiles, _twitchRewards, _vtubeModels, _vtubeStatus } from "../../atoms";
+import { Header } from "../generic/header";
 import { Profile } from "./profile";
 
 export const Profiles = () => {
@@ -11,8 +12,7 @@ export const Profiles = () => {
   const [newProfileName, setNewProfileName] = useState("");
   const [currentlyEditingProfile, setCurrentlyEditingProfile] = useState(null);
   const vtubeStatus = useRecoilValue(_vtubeStatus);
-  const twitchAuth = useRecoilValue(_twitchConnected);
-  const [twitchRewards, setTwitchRewards] = useRecoilState(_twitchRewards);
+  const twitchRewards = useRecoilValue(_twitchRewards);
   const [vtubeModels, setVtubeModels] = useRecoilState(_vtubeModels);
 
   useEffect(() => {
@@ -35,29 +35,18 @@ export const Profiles = () => {
   }, []);
 
   useEffect(() => {
-    async function getRewards() {
-      try {
-        if (twitchAuth && !twitchRewards) {
-          const result = await api.twitch.getRewards();
-          setTwitchRewards(result);
-          console.log(result);
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    getRewards();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [twitchAuth]);
-  useEffect(() => {
     getModels();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vtubeStatus, vtubeModels])
 
   const getModels = async () => {
-    if (vtubeStatus.connected && (!vtubeModels || vtubeModels.length === 0)) {
-      const vtubeModelList = await api.vtubeStudio.list();
-      setVtubeModels(vtubeModelList.data);
+    try {
+      if (vtubeStatus.connected && (!vtubeModels || vtubeModels.length === 0)) {
+        const vtubeModelList = await api.vtubeStudio.list();
+        setVtubeModels(vtubeModelList.data);
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
   const editProfileMain = async (newVersion) => {
@@ -117,6 +106,7 @@ export const Profiles = () => {
     isEditingTarget={parseInt(currentlyEditingProfile) === parseInt(p.id)} />
 
   return (<Fragment>
+    <Header>Create and Edit Modelswitcher Profiles</Header>
     <h2>
       Create A Profile
     </h2>

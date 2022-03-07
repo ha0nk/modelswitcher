@@ -27,6 +27,7 @@ ipcMain.on('vtube-hotkeys', electronVtube.getModelHotkeys);
 ipcMain.handle('twitch-auth-request', electronTwitch.authTwitch);
 ipcMain.handle('twitch-auth-cancel', electronTwitch.cancelAuthTwitch);
 ipcMain.handle('twitch-list-rewards', electronTwitch.getRewards);
+ipcMain.handle('twitch-get-reward-image-url', electronTwitch.getRewardImageUrl);
 
 ipcMain.handle('twitch-create-reward', electronTwitch.createReward);
 ipcMain.handle('twitch-update-reward', electronTwitch.updateReward);
